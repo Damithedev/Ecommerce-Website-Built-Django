@@ -1,0 +1,112 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}About Us {% endblock %}
+{% block first_content %}
+    <div class="page-head_agile_info_w3l">
+
+	</div>
+    <div class="services-breadcrumb">
+		<div class="agile_inner_breadcrumb">
+			<div class="container">
+				<ul class="w3_short">
+					<li>
+						<a href="{% url 'home' %}">Home</a>
+						<i>|</i>
+					</li>
+					<li>About Us</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block second_content %}
+    	<div class="welcome py-sm-5 py-4">
+		<div class="container py-xl-4 py-lg-2">
+			<!-- tittle heading -->
+			<h3 class="tittle-w3l text-center mb-lg-5 mb-sm-4 mb-3">
+				<span>A</span>bout
+				<span>U</span>s</h3>
+			<!-- //tittle heading -->
+			<div class="row">
+				<div class="col-lg-6 welcome-left">
+					<h3>Welcome</h3>
+					<h4 class="my-sm-3 my-2">At EnochNext, we are passionate about technology and committed to providing our customers with the latest and most innovative phones and laptops. Founded with a vision to redefine the way you experience digital devices, we strive to be your trusted partner in the world of smart technology.</h4>
+					<p>Our mission at EnochNext is to empower individuals and businesses by offering a curated selection of high-quality smartphones and laptops. We believe that technology should not only meet but exceed your expectations, making your daily life more efficient, enjoyable, and connected.</p>
+				</div>
+				<div class="col-lg-6 welcome-right-top mt-lg-0 mt-sm-5 mt-4">
+					<img src="{% static 'images/ab.jpg' %}" class="img-fluid" alt=" ">
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //about -->
+
+	<!-- testimonials -->
+	<div class="testimonials py-sm-5 py-4">
+		<div class="container py-xl-4 py-lg-2">
+			<!-- tittle heading -->
+			<h3 class="tittle-w3l text-center text-white mb-lg-5 mb-sm-4 mb-3">
+				<span>O</span>ur
+				<span>C</span>ustomers
+				<span>S</span>ays</h3>
+			<!-- tittle heading -->
+			<div class="row gallery-index">
+				<div class="col-sm-6 med-testi-grid">
+					<div class="med-testi test-tooltip rounded p-4">
+						<p>I recently purchased a new laptop from EnochNext, and I couldn't be more impressed with the entire experience. From start to finish, EnochNext has proven to be a reliable and customer-focused company.</p>
+					</div>
+					<div class="row med-testi-left my-5">
+						<div class="col-lg-2 col-3 w3ls-med-testi-img">
+							<img src="{% static 'images/user.jpg' %}" alt=" " class="img-fluid rounded-circle" />
+						</div>
+						<div class="col-lg-10 col-9 med-testi-txt">
+							<h4 class="font-weight-bold mb-lg-1 mb-2">Damilola</h4>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 med-testi-grid">
+					<div class="med-testi test-tooltip rounded p-4">
+						<p>"I recently bought the latest smartphone from EnochNext, and I'm thrilled with my purchase! The sleek design and advanced features exceeded my expectations. The ordering process was easy, and the delivery was prompt. EnochNext is my go-to for cutting-edge tech!"</p>
+					</div>
+					<div class="row med-testi-left my-5">
+						<div class="col-lg-2 col-3 w3ls-med-testi-img">
+							<img src="{% static 'images/user.jpg' %}" alt=" " class="img-fluid rounded-circle" />
+						</div>
+						<div class="col-lg-10 col-9 med-testi-txt">
+							<h4 class="font-weight-bold mb-lg-1 mb-2">Abiola</h4>
+
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 med-testi-grid">
+					<div class="med-testi test-tooltip rounded p-4">
+						<p>"I want to express my gratitude to EnochNext for their outstanding service. The customer support team was incredibly helpful in guiding me to the perfect laptop for my work needs. The product arrived on time and in perfect condition. EnochNext has earned my trust as a reliable tech provider."</p>
+					</div>
+					<div class="row med-testi-left mt-sm-5 my-5">
+						<div class="col-lg-2 col-3 w3ls-med-testi-img">
+							<img src="{% static 'images/user.jpg' %}" alt=" " class="img-fluid rounded-circle" />
+						</div>
+						<div class="col-lg-10 col-9 med-testi-txt">
+							<h4 class="font-weight-bold mb-lg-1 mb-2">Charles</h4>
+
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 med-testi-grid">
+					<div class="med-testi test-tooltip rounded p-4">
+						<p>EnochNext made upgrading my phone a breeze! The website's intuitive interface made it easy to find the latest models. I appreciated the attention to detail in product descriptions. My new phone is everything I wanted and more. EnochNext delivers on quality and customer satisfaction!</p>
+					</div>
+					<div class="row med-testi-left mt-5">
+						<div class="col-lg-2 col-3 w3ls-med-testi-img">
+							<img src="{% static 'images/user.jpg' %}" alt=" " class="img-fluid rounded-circle" />
+						</div>
+						<div class="col-lg-10 col-9 med-testi-txt">
+							<h4 class="font-weight-bold mb-lg-1 mb-2">Jessie</h4>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

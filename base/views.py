@@ -136,3 +136,15 @@ def searchitems(request):
      context = {'categories': categories,  'reg_form': registration_form,
                 'login_form': login_form, 'products': search_results, 'all_categories': all_categories}
      return render(request, 'search.html', context)
+
+def aboutus(request):
+    registration_form = CustomUserCreationForm()
+    login_form = CustomAuthenticationForm()
+    all_categories = Category.objects.all()
+    category_products = {}
+    for category in all_categories:
+        products = Product.objects.filter(category=category).order_by('-created')[:3]
+        category_products[category] = products
+    categories = Category.objects.filter(parent__isnull=True)
+    context = {'categories': categories, 'category_products': category_products, 'reg_form': registration_form ,'login_form': login_form}
+    return render(request, 'aboutus.html', context)
