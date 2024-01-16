@@ -1,0 +1,93 @@
+
+{% extends 'main.html' %}
+
+{% load static %}
+{% block title %}
+{{ product }}
+{% endblock %}
+{% block first_content %}
+    {% include 'banner2.html' %}
+{% endblock %}
+{% block second_content %}
+    <div class="banner-bootom-w3-agileits py-5">
+		<div class="container py-xl-4 py-lg-2">
+			<!-- tittle heading -->
+			<h3 class="tittle-w3l text-center mb-lg-5 mb-sm-4 mb-3">
+                {{ product }}</h3>
+			<!-- //tittle heading -->
+			<div class="row">
+				<div class="col-lg-5 col-md-8 single-right-left ">
+					<div class="grid images_3_of_2">
+						<div class="flexslider">
+							<ul class="slides">
+                                {% for image in images %}
+								<li data-thumb="{{ image.image.url }}">
+									<div class="thumb-image">
+										<img src="{{ image.image.url }}" data-imagezoom="true" class="img-fluid" alt=""> </div>
+								</li>
+                                {% endfor %}
+
+							</ul>
+							<div class="clearfix"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-7 single-right-left simpleCart_shelfItem">
+					<h3 class="mb-3">{{ product }}</h3>
+					<p class="mb-3">
+						<span class="item_price">₦{{ product.price }}</span>
+
+						<label>Free delivery</label>
+					</p>
+					<div class="single-infoagile">
+						<ul>
+                            {% if product.cashondelivery %}
+							<li class="mb-3">
+								Cash on Delivery Eligible.
+							</li>
+                            {% endif %}
+							<li class="mb-3">
+								Shipping Speed to Delivery.
+							</li>
+							<li class="mb-3">
+								Always Authentic
+							</li>
+							<li class="mb-3">
+								Secure Shopping
+							</li>
+						</ul>
+					</div>
+					<div class="product-single-w3l">
+						<p class="my-3">
+							Description</p>
+						<p> {{ product.description|safe }}</p>
+						<p class="my-sm-4 my-3">
+							<i class="fas fa-retweet mr-3"></i>Credit/ Debit/ ATM card
+						</p>
+					</div>
+					<div class="occasion-cart">
+						<div class="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
+							<form action="#" method="post">
+								<fieldset>
+									<input type="hidden" name="cmd" value="_cart" />
+									<input type="hidden" name="add" value="{{ product.id }}" />
+									<input type="hidden" name="business" value=" " />
+									<input type="hidden" name="item_name" value="{{ product }}" />
+									<input type="hidden" name="amount" value="{{ product.price }}" />
+									<input type="hidden" name="discount_amount" value="{{ product.discount }}" />
+									<input type="hidden" name="currency_code" value="USD" />
+									<input type="hidden" name="return" value=" " />
+									<input type="hidden" name="cancel_return" value=" " />
+									<input type="submit" name="submit" value="Add to cart" class="button" />
+								</fieldset>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!-- imagezoom -->
+
+{% endblock %}

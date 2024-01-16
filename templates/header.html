@@ -1,0 +1,433 @@
+<!-- top-header -->
+{% load static %}
+	<div class="agile-main-top">
+		<div class="container-fluid">
+			<div class="row main-top-w3l py-2">
+				<div class="col-lg-4 header-most-top">
+					<p class="text-white text-lg-left text-center">Offer Zone Top Deals & Discounts
+						<i class="fas fa-shopping-cart ml-1"></i>
+					</p>
+				</div>
+				<div class="col-lg-8 header-right mt-lg-0 mt-2">
+					<!-- header lists -->
+					<ul>
+						<li class="text-center border-right text-white">
+							<a class="play-icon popup-with-zoom-anim text-white" href="#small-dialog1">
+								<i class="fas fa-map-marker mr-2"></i>Select Location</a>
+						</li>
+						<li class="text-center border-right text-white">
+							<a href="#" data-toggle="modal" data-target="#exampleModal" class="text-white">
+								<i class="fas fa-truck mr-2"></i>Track Order</a>
+						</li>
+						<li class="text-center border-right text-white">
+							<i class="fas fa-phone mr-2"></i> 001 234 5678
+						</li>
+                        {% if request.user.is_authenticated %}
+                            <li class="text-center border-right text-white">
+							<a href="#" data-toggle="modal" data-target="#infoModal" class="text-white">
+								<i class="fas fa-user"></i> {{ request.user }} </a>
+						</li>
+                        {% else %}
+                            <li class="text-center text-white">
+							<a href="#" data-toggle="modal" data-target="#exampleModal2" class="text-white">
+								<i class="fas fa-sign-out-alt mr-2"></i>Register </a>
+						</li>
+                            <li class="text-center border-right text-white">
+							<a href="#" data-toggle="modal" data-target="#exampleModal" class="text-white"><i class="fas fa-sign-in-alt mr-2"></i> Log In </a>
+						</li>
+                        {% endif %}
+
+
+					</ul>
+					<!-- //header lists -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Button trigger modal(select-location) -->
+	<div id="small-dialog1" class="mfp-hide">
+		<div class="select-city">
+			<h3>
+				<i class="fas fa-map-marker"></i> Please Select Your Location</h3>
+			<select class="list_of_cities">
+             <option value="Abia">Abia</option>
+    <option value="Adamawa">Adamawa</option>
+    <option value="Akwa Ibom">Akwa Ibom</option>
+    <option value="Anambra">Anambra</option>
+    <option value="Bauchi">Bauchi</option>
+    <option value="Bayelsa">Bayelsa</option>
+    <option value="Benue">Benue</option>
+    <option value="Borno">Borno</option>
+    <option value="Cross River">Cross River</option>
+    <option value="Delta">Delta</option>
+    <option value="Ebonyi">Ebonyi</option>
+    <option value="Edo">Edo</option>
+    <option value="Ekiti">Ekiti</option>
+    <option value="Enugu">Enugu</option>
+    <option value="Federal Capital Territory">Federal Capital Territory</option>
+    <option value="Gombe">Gombe</option>
+    <option value="Imo">Imo</option>
+    <option value="Jigawa">Jigawa</option>
+    <option value="Kaduna">Kaduna</option>
+    <option value="Kano">Kano</option>
+    <option value="Katsina">Katsina</option>
+    <option value="Kebbi">Kebbi</option>
+    <option value="Kogi">Kogi</option>
+    <option value="Kwara">Kwara</option>
+    <option value="Lagos">Lagos</option>
+    <option value="Nasarawa">Nasarawa</option>
+    <option value="Niger">Niger</option>
+    <option value="Ogun">Ogun</option>
+    <option value="Ondo">Ondo</option>
+    <option value="Osun">Osun</option>
+    <option value="Oyo">Oyo</option>
+    <option value="Plateau">Plateau</option>
+    <option value="Rivers">Rivers</option>
+    <option value="Sokoto">Sokoto</option>
+    <option value="Taraba">Taraba</option>
+    <option value="Yobe">Yobe</option>
+    <option value="Zamfara">Zamfara</option>
+			</select>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<!-- //shop locator (popup) -->
+
+	<!-- modals -->
+	<!-- log in -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title text-center">Log In</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+		<form action="" method="post" id="loginform" onsubmit="loginusr(event);">
+                    {% csrf_token %}
+        <div>
+            <p style="color: red" id="errortext"></p>
+        </div>
+    {% for field in login_form %}
+        <div class="form-group">
+        <label class="col-form-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+        {{ field }}
+        </div>
+
+    {% endfor %}
+        <input type="hidden" value="login" name="page">
+                         <div class="right-w3l">
+							<input type="submit"  id = "loginbtn" class="form-control" value="Login">
+						</div>
+					</form>
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function loginusr(event) {
+        event.preventDefault();
+        let errorfld = document.getElementById("errortext")
+        let formData = $('#loginform').serialize();
+         let errortxt = ""
+        $.ajax({
+            type: "POST",
+            url: "login/",
+            data: formData,
+              headers: { "X-CSRFToken": getCookie("csrftoken") },
+            statusCode: {
+                200: function(response) {
+
+                    console.log("Logged in", response);
+                    location.reload()
+                    // Handle the response for status code 200
+                },
+                500: function() {
+                   errortxt = "Internal server error try again later";
+                    console.error(errortxt);
+                     errorfld.innerText = errortxt;
+                    // Handle the response for status code 400
+                },
+                401: function() {
+                    errortxt = "Incorrect Username/Password";
+                    console.error(errortxt);
+                     errorfld.innerText = errortxt;
+                    // Handle the response for status code 401
+                },
+                403: function(){
+                    errortxt = "Please enter the correct username and password. Note that both fields may be case-sensitive.";
+                      console.error(errortxt);
+                     errorfld.innerText = errortxt;
+                }
+            },
+            success: function(response) {
+                // Handle the success response
+                 console.log("okk");
+                console.log(response);
+            },
+            error: function(error) {
+                // Handle the error response
+                console.log("fail")
+                console.error(error);
+            }
+        });
+    }
+
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Search for the csrf token cookie
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title text-center">{{ request.user }}</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+                    {{ request.user }}
+                    <form method="post">
+                        <div class="right-w3l">
+							<input type="submit" class="form-control" value="Logout">
+						</div>
+                    </form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- register -->
+	<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Register</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form action="" method="post" id="regform" onsubmit="registerusr(event)">
+    {% csrf_token %}
+
+    {% if reg_form.non_field_errors %}
+        <ul class="custom-errorlist">
+            {% for error in reg_form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+<div>
+            <p style="color: red" id="regerrortext"></p>
+        </div>
+    {% for field in reg_form %}
+        <div class="form-group">
+
+            <label class="col-form-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+            {{ field }}
+        </div>
+    {% endfor %}
+
+    <input type="hidden" value="register" name="page">
+    <div class="right-w3l">
+        <input type="submit" class="form-control" value="Register">
+    </div>
+</form>
+                <script>
+    function registerusr(event) {
+        event.preventDefault();
+        let errorfld = document.getElementById("regerrortext")
+        let formData = $('#regform').serialize();
+         let errortxt = ""
+        $.ajax({
+            type: "POST",
+            url: "register/",
+            data: formData,
+              headers: { "X-CSRFToken": getCookie("csrftoken") },
+            statusCode: {
+                200: function(response) {
+
+                    console.log("Logged in", response);
+                    location.reload()
+                    // Handle the response for status code 200
+                },
+                500: function(response) {
+                   errortxt = response.responseText
+                   alert(errortxt)
+                    console.error(errortxt);
+                     errorfld.innerHTML = errortxt;
+                    // Handle the response for status code 400
+                },
+
+                400: function(){
+                    errortxt = ' {% if field.errors %}<ul class="custom-errorlist">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %} </ul>{% endif %}';
+                      console.error(errortxt);
+                     errorfld.innerText = errortxt;
+                }
+            },
+            success: function(response) {
+                // Handle the success response
+                 console.log("okk");
+                console.log(response);
+            },
+            error: function(error) {
+                errortxt = error
+                   alert(errortxt)
+                    console.error(errortxt);
+                     errorfld.innerHTML = errortxt;
+                    // Handle the response for status code 400
+
+
+            }
+        });
+    }
+
+</script>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //modal -->
+	<!-- //top-header -->
+
+	<!-- header-bottom-->
+	<div class="header-bot">
+		<div class="container">
+			<div class="row header-bot_inner_wthreeinfo_header_mid">
+				<!-- logo -->
+				<div class="col-md-3 logo_agile">
+					<h1 class="text-center">
+						<a href="{% url 'home' %}" class="font-weight-bold font-italic">
+							<img src="{% static 'images/logo2.png' %}" alt=" " class="img-fluid">Electro Store
+						</a>
+					</h1>
+				</div>
+				<!-- //logo -->
+				<!-- header-bot -->
+				<div class="col-md-9 header mt-4 mb-md-0 mb-4">
+					<div class="row">
+						<!-- search -->
+						<div class="col-10 agileits_search">
+							<form class="form-inline" action="#" method="post">
+								<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" required>
+								<button class="btn my-2 my-sm-0" type="submit">Search</button>
+							</form>
+						</div>
+						<!-- //search -->
+						<!-- cart details -->
+						<div class="col-2 top_nav_right text-center mt-sm-0 mt-2">
+							<div class="wthreecartaits wthreecartaits2 cart cart box_1">
+								<form action="#" method="post" class="last">
+									<input type="hidden" name="cmd" value="_cart">
+									<input type="hidden" name="display" value="1">
+									<button class="btn w3view-cart" type="submit" name="submit" value="">
+										<i class="fas fa-cart-arrow-down"></i>
+									</button>
+								</form>
+							</div>
+						</div>
+						<!-- //cart details -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- shop locator (popup) -->
+	<!-- //header-bottom -->
+	<!-- navigation -->
+	<div class="navbar-inner">
+		<div class="container">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<div class="agileits-navi_search">
+					<form action="#" method="post">
+						<select id="agileinfo-nav_search" name="agileinfo_search" class="border" required="">
+							<option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category }}">{{ category }}</option>
+                            {% endfor %}
+
+						</select>
+					</form>
+				</div>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+				    aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav ml-auto text-center mr-xl-5">
+						<li class="nav-item active mr-lg-2 mb-lg-0 mb-2">
+							<a class="nav-link" href="{% url 'home' %}">Home
+							</a>
+						</li>
+                        {% for category in categories %}
+                            {% if category.children.exists %}
+                            <li class="nav-item dropdown mr-lg-2 mb-lg-0 mb-2">
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{{ category }}
+							</a>
+							<div class="dropdown-menu">
+								<div class="agile_inner_drop_nav_info p-4">
+
+									<div class="row">
+										<div class="col-sm-6 multi-gd-img">
+											<ul class="multi-column-dropdown">
+                                                {% for child in category.children.all %}
+												<li>
+													<a href="">{{ child}}</a>
+												</li>
+
+                                                {% endfor %}
+											</ul>
+										</div>
+                                    </div>
+								</div>
+							</div>
+                            </li>
+                            {% else %}
+
+                                <li class="nav-item mr-lg-2 mb-lg-0 mb-2">
+							<a class="nav-link" href="">{{ category }}</a>
+						</li>
+                            {% endif %}
+                        {% endfor %}
+
+						<li class="nav-item">
+							<a class="nav-link" href="contact.html">About Us</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="contact.html">Contact Us</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+	</div>
+	<!-- //navigation -->
+
+
+
