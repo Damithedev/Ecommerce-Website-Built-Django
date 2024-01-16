@@ -333,8 +333,9 @@
 					<div class="row">
 						<!-- search -->
 						<div class="col-10 agileits_search">
-							<form class="form-inline" action="#" method="post">
-								<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" required>
+
+							<form class="form-inline" action="{% url  'search' %}" method="GET">
+								<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"  name="q" required>
 								<button class="btn my-2 my-sm-0" type="submit">Search</button>
 							</form>
 						</div>
@@ -364,15 +365,6 @@
 		<div class="container">
 			<nav class="navbar navbar-expand-lg navbar-light bg-light">
 				<div class="agileits-navi_search">
-					<form action="#" method="post">
-						<select id="agileinfo-nav_search" name="agileinfo_search" class="border" required="">
-							<option value="">All Categories</option>
-                            {% for category in categories %}
-                                <option value="{{ category }}">{{ category }}</option>
-                            {% endfor %}
-
-						</select>
-					</form>
 				</div>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
 				    aria-expanded="false" aria-label="Toggle navigation">
@@ -387,7 +379,7 @@
                         {% for category in categories %}
                             {% if category.children.exists %}
                             <li class="nav-item dropdown mr-lg-2 mb-lg-0 mb-2">
-							<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<a class="nav-link dropdown-toggle" href="{% url 'category details' category.id %}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								{{ category }}
 							</a>
 							<div class="dropdown-menu">
@@ -398,7 +390,7 @@
 											<ul class="multi-column-dropdown">
                                                 {% for child in category.children.all %}
 												<li>
-													<a href="">{{ child}}</a>
+													<a href={% url 'category details' child.id %}>{{ child}}</a>
 												</li>
 
                                                 {% endfor %}
@@ -411,7 +403,7 @@
                             {% else %}
 
                                 <li class="nav-item mr-lg-2 mb-lg-0 mb-2">
-							<a class="nav-link" href="">{{ category }}</a>
+							<a class="nav-link" href="{% url 'category details' category.id %}">{{ category }}</a>
 						</li>
                             {% endif %}
                         {% endfor %}

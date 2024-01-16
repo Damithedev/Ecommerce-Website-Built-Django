@@ -1,18 +1,15 @@
 {% extends 'main.html' %}
-{% block title %}
-{{ category.title }}
-{% endblock %}
+{% block title %}Search results -- {{ request.GET.q }}{% endblock %}
 {% block first_content %}
-    {% include 'banner2.html' %}
 {% endblock %}
 {% block second_content %}
 
-<div class="ads-grid py-sm-5 py-4">
+  <div class="ads-grid py-sm-5 py-4">
 		<div class="container py-xl-4 py-lg-2">
 			<!-- tittle heading -->
 			<h3 class="tittle-w3l text-center mb-lg-5 mb-sm-4 mb-3">
-            {{ cat }}
 
+            Search result for {{ request.GET.q }}
             </h3>
 			<!-- //tittle heading -->
 			<div class="row">
@@ -27,7 +24,8 @@
 									<div class="men-pro-item simpleCart_shelfItem">
 										<div class="men-thumb-item text-center">
 											<img src="{{ product.product_images.first.image.url }}" alt="{{ product }} image" width="200" height="250" >
-											<div class="men-cart-pro">												<div class="inner-men-cart-pro">
+											<div class="men-cart-pro">
+												<div class="inner-men-cart-pro">
 													<a href="{% url 'product details' product.id %}" class="link-product-add-cart">Quick View</a>
 												</div>
 											</div>
@@ -63,4 +61,5 @@
                                 {% endfor %}
 
                             </div></div></div></div></div></div></div>
+
 {% endblock %}

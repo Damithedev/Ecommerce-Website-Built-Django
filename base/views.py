@@ -48,12 +48,12 @@ def category_page(request, cid):
     login_form = CustomAuthenticationForm()
     all_categories = Category.objects.all()
     category_products = {}
-    for category in all_categories:
-        products = Product.objects.filter(category=category).order_by('-created')[:3]
-        category_products[category] = products
+    for categoryz in all_categories:
+        products = Product.objects.filter(category=categoryz).order_by('-created')[:3]
+        category_products[categoryz] = products
     categories = Category.objects.filter(parent__isnull=True)
     category_products = {}
-    context = {'categories': categories, 'category_products': category_products, 'reg_form': registration_form , 'login_form': login_form, 'products': productsz, 'catnav':categoriesnav }
+    context = {'categories': categories, 'category_products': category_products, 'reg_form': registration_form , 'login_form': login_form, 'products': productsz, 'catnav':categoriesnav, 'cat': category }
     return render(request, 'sections.html', context)
 
 
@@ -122,3 +122,17 @@ def register_user(request):
             return HttpResponse(errors, status=500, content_type="text/html")
 
             # Redirect to the home page or any other page
+
+
+def searchitems(request):
+     query = request.GET.get('q')
+     search_results = Product.objects.none()
+     if query is not None:
+         search_results = Product.objects.filter(title__icontains=query )
+     registration_form = CustomUserCreationForm()
+     login_form = CustomAuthenticationForm()
+     all_categories = Category.objects.all()
+     categories = Category.objects.filter(parent__isnull=True)
+     context = {'categories': categories,  'reg_form': registration_form,
+                'login_form': login_form, 'products': search_results, 'all_categories': all_categories}
+     return render(request, 'search.html', context)
