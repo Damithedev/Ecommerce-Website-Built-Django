@@ -3,6 +3,7 @@
 {% block first_content %}
 {% endblock %}
 {% block second_content %}
+
     <section class="h-100 h-custom" style="background-color: #eee;">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -20,15 +21,15 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                   <div>
                     <p class="mb-1">Shopping cart</p>
-                    <p class="mb-0">You have 4 items in your cart</p>
+                    <p class="mb-0">You have {{ cartitems.count }} items in your cart</p>
                   </div>
                   <div>
-                    <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!"
-                        class="text-body">price <i class="fas fa-angle-down mt-1"></i></a></p>
+
                   </div>
                 </div>
 
-                <div class="card mb-3">
+                           {% for item in cartitems %}
+                               <div class="card mb-3">
                   <div class="card-body">
                     <div class="d-flex justify-content-between">
                       <div class="d-flex flex-row align-items-center">
@@ -36,98 +37,52 @@
 
                         </div>
                         <div class="ms-3">
-                          <h5>Iphone 11 pro</h5>
-                          <p class="small mb-0">256GB, Navy Blue</p>
+
+                          <h6>{% if item.product.title|length > 15 %}
+      {{ item.product.title|slice:":15" }}...
+    {% else %}
+      {{ item.product }}
+    {% endif %}.</h6>
+                            <p class="small mb-0" style="font-size: 10px">{% if item.product.description|length > 30 %}
+      {{ item.product.description|slice:":30" }}...
+    {% else %}
+      {{ item.product.description }}
+    {% endif %}</p>
                         </div>
                       </div>
-                      <div class="d-flex flex-row align-items-center">
-                        <div style="width: 50px;">
-                          <h5 class="fw-normal mb-0">2</h5>
-                        </div>
+                      <div class="d-flex flex-row align-items-center ms-auto">
+                        <div class="d-flex flex-row " style="width: 90px;">
+                            <button  data-product="{{ item.product.id }}" data-action="add" class="update-cart" style="
+                              border: none;
+                              border-radius: 90px;
+                              padding: 2px 5px;
+  background-color: #00ACEE;
+  cursor: pointer;
+  display: inline-block;"
+                            ><i>+</i></button>
+            <h6 class="fw-normal mb-0 mx-2" id="{{ item.product.id }}" >{{ item.quantity }}</h6>
+
+                            <button  data-product="{{ item.product.id }}" data-action="remove" class="update-cart" style="
+                              border: none;
+                              border-radius: 90px;
+                              padding: 2px 5px;
+  background-color: #00ACEE;
+  cursor: pointer;
+  display: inline-block;"
+                            ><i>-</i></button>
+</div>
+
                         <div style="width: 80px;">
-                          <h5 class="mb-0">$900</h5>
+                          <h5 class="mb-0" style="font-size: 12px" id="{{ item.product.id }}price">&#x20A6;{% widthratio item.quantity 1 item.product.price %}</h5>
                         </div>
-                        <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
+                        <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt deleteitem" data-product="{{ item.product.id }}"></i></a>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div class="card mb-3">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                      <div class="d-flex flex-row align-items-center">
-                        <div>
+    {% endfor %}
 
-                        </div>
-                        <div class="ms-3">
-                          <h5>Samsung galaxy Note 10 </h5>
-                          <p class="small mb-0">256GB, Navy Blue</p>
-                        </div>
-                      </div>
-                      <div class="d-flex flex-row align-items-center">
-                        <div style="width: 50px;">
-                          <h5 class="fw-normal mb-0">2</h5>
-                        </div>
-                        <div style="width: 80px;">
-                          <h5 class="mb-0">$900</h5>
-                        </div>
-                        <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card mb-3">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                      <div class="d-flex flex-row align-items-center">
-                        <div>
-
-
-
-                        </div>
-                        <div class="ms-3">
-                          <h5>Canon EOS M50</h5>
-                          <p class="small mb-0">Onyx Black</p>
-                        </div>
-                      </div>
-                      <div class="d-flex flex-row align-items-center">
-                        <div style="width: 50px;">
-                          <h5 class="fw-normal mb-0">1</h5>
-                        </div>
-                        <div style="width: 80px;">
-                          <h5 class="mb-0">$1199</h5>
-                        </div>
-                        <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card mb-3 mb-lg-0">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                      <div class="d-flex flex-row align-items-center">
-                        <div>
-                           </div>
-                        <div class="ms-3">
-                          <h5>MacBook Pro</h5>
-                          <p class="small mb-0">1TB, Graphite</p>
-                        </div>
-                      </div>
-                      <div class="d-flex flex-row align-items-center">
-                        <div style="width: 50px;">
-                          <h5 class="fw-normal mb-0">1</h5>
-                        </div>
-                        <div style="width: 80px;">
-                          <h5 class="mb-0">$1799</h5>
-                        </div>
-                        <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
               </div>
               <div class="col-lg-5">
@@ -135,24 +90,7 @@
                 <div class="card bg-primary text-white rounded-3">
                   <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                      <h5 class="mb-0 " style="color: #0b0b0b">Cart details</h5>
-                    </div>
 
-                    <hr class="my-4">
-
-                    <div class="d-flex justify-content-between">
-                      <p class="mb-2" style="color: #0b0b0b">Subtotal</p>
-                      <p class="mb-2" style="color: #0b0b0b">$4798.00</p>
-                    </div>
-
-                    <div class="d-flex justify-content-between">
-                      <p class="mb-2" style="color: #0b0b0b">Shipping</p>
-                      <p class="mb-2" style="color: #0b0b0b">$20.00</p>
-                    </div>
-
-                    <div class="d-flex justify-content-between mb-4">
-                      <p class="mb-2" style="color: #0b0b0b">Total(Incl. taxes)</p>
-                      <p class="mb-2" style="color: #0b0b0b">$4818.00</p>
                     </div>
 
                     <button type="button" class="btn btn-info btn-block btn-lg">

@@ -162,17 +162,28 @@ def updateitem(request):
     orderitem, created = OrderItem.objects.get_or_create(order=order, product=product)
     if action == 'add':
         orderitem.quantity +=1
+        orderitem.save()
+        print(orderitem.quantity)
+        return JsonResponse({'quantity':orderitem.quantity, 'sum': orderitem.quantity*product.price}, safe=False)
+
     if action == 'remove':
         orderitem.quantity -=1
-    orderitem.save()
-
-    if orderitem.quantity <= 0:
+        if orderitem.quantity <= 0:
+            orderitem.delete()
+        else:
+            orderitem.save()
+        return JsonResponse({'quantity': orderitem.quantity, 'sum': orderitem.quantity * product.price}, safe=False)
+    if orderitem.quantity <= 0 or action == 'delete':
         orderitem.delete()
+
 
     return JsonResponse('Item was added', safe=False)
 
 
 def cart(request):
+    order= Order.objects.get(customer=request.user, status='cart')
+    print(order)
+    cartitems = OrderItem.objects.filter(order=order)
     registration_form = CustomUserCreationForm()
     login_form = CustomAuthenticationForm()
     all_categories = Category.objects.all()
@@ -181,6 +192,7 @@ def cart(request):
         products = Product.objects.filter(category=category).order_by('-created')[:3]
         category_products[category] = products
     categories = Category.objects.filter(parent__isnull=True)
+
     context = {'categories': categories, 'category_products': category_products, 'reg_form': registration_form,
-               'login_form': login_form}
-    return render(request, 'cart.html', context)
+               'login_form': login_form, 'cartitems':cartitems}
+    return render(request, 'cart.html', context )

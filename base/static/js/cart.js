@@ -1,5 +1,8 @@
 var updatebtns = document.getElementsByClassName('update-cart')
 
+var deletebtns = document.getElementsByClassName('deleteitem')
+
+
 
 for(var i =0; i< updatebtns.length; i++){
     updatebtns[i].addEventListener('click', function () {
@@ -22,6 +25,8 @@ for(var i =0; i< updatebtns.length; i++){
 function updateuserorder(pid, action) {
     console.log("Sending data.....");
     var url ='updateitem';
+    var itemquant = document.getElementById(pid)
+    var price=document.getElementById(pid+'price')
 
     fetch(url, {
         method: 'POST',
@@ -32,7 +37,14 @@ function updateuserorder(pid, action) {
         },
         body:JSON.stringify({'pid': pid , 'action':action}),
 
+
     })
         .then(value => value.json())
-        .then(value => console.log("Data",value))
+        .then(function (value) {
+            itemquant.innerText = value['quantity']
+            if (itemquant.innerText <= 0){
+                location.reload()
+            }
+            price.innerText = "₦" +value['sum']
+        })
 }
