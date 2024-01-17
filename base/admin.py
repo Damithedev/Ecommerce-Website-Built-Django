@@ -1,5 +1,5 @@
 from django.contrib import admin
-from base.models import Category, Product, ProductImages
+from base.models import Category, Product, ProductImages,Order,OrderItem
 admin.site.register(Category)
 # Register your models here.
 class ProductImageInline(admin.TabularInline):  # TabularInline or StackedInline based on your preference
@@ -9,5 +9,12 @@ class ProductImageInline(admin.TabularInline):  # TabularInline or StackedInline
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline]
 
+class Orderitemslist(admin.TabularInline):
+    model = OrderItem
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [Orderitemslist]
+
+
 admin.site.register(Product, ProductAdmin)
+admin.site.register(Order, OrderAdmin)
 

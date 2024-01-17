@@ -1843,7 +1843,11 @@ button.submit.check_out:hover {
 img.pp-img {
     width: 65%;
 }
-
+@media (min-width: 1025px) {
+.h-custom {
+height: 100vh !important;
+}
+}
 .tab-grid p {
     color: #8B8B8B;
     font-size: 0.95em;

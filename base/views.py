@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -5,7 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 
 from base.forms import CustomAuthenticationForm, CustomUserCreationForm
-from base.models import Category, Product, ProductImages
+from base.models import Category, Product, ProductImages, Order, OrderItem
 
 
 # Create your views here.
@@ -148,3 +150,37 @@ def aboutus(request):
     categories = Category.objects.filter(parent__isnull=True)
     context = {'categories': categories, 'category_products': category_products, 'reg_form': registration_form ,'login_form': login_form}
     return render(request, 'aboutus.html', context)
+
+def updateitem(request):
+    data = json.loads(request.body)
+    productID = data['pid']
+    action = data['action']
+    print(productID)
+    customer = request.user
+    product = Product.objects.get(id=productID)
+    order , created1 = Order.objects.get_or_create(customer=customer, status='cart')
+    orderitem, created = OrderItem.objects.get_or_create(order=order, product=product)
+    if action == 'add':
+        orderitem.quantity +=1
+    if action == 'remove':
+        orderitem.quantity -=1
+    orderitem.save()
+
+    if orderitem.quantity <= 0:
+        orderitem.delete()
+
+    return JsonResponse('Item was added', safe=False)
+
+
+def cart(request):
+    registration_form = CustomUserCreationForm()
+    login_form = CustomAuthenticationForm()
+    all_categories = Category.objects.all()
+    category_products = {}
+    for category in all_categories:
+        products = Product.objects.filter(category=category).order_by('-created')[:3]
+        category_products[category] = products
+    categories = Category.objects.filter(parent__isnull=True)
+    context = {'categories': categories, 'category_products': category_products, 'reg_form': registration_form,
+               'login_form': login_form}
+    return render(request, 'cart.html', context)

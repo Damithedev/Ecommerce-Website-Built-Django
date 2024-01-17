@@ -33,3 +33,14 @@ class Customer(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class Order(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    status = models.CharField(max_length=19)
+    date = models.DateTimeField(auto_now_add=True)
+
+class OrderItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_items')
+    quantity = models.IntegerField(default=0)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
