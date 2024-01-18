@@ -56,7 +56,25 @@
 </head>
 
 <body>
+<div id="popupz" style="
+display: none;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px;
+    background-color: gray;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    opacity: 0.8;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;">
+        <span class="popup-content" style="display: block; color: white">Item added to cart!</span>
+    </div>
 {% include 'header.html' %}
+
+
+
 
 {% block first_content %}
 

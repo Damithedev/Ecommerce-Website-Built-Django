@@ -13,16 +13,25 @@
 
             <div class="row">
 
-              <div class="col-lg-7">
-                <h5 class="mb-3"><a href="#!" class="text-body"><i
-                      class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
+              <div class="col-lg-7" >
+                <h5 class="mb-3" onclick="history.back()"><a href="#!" class="text-body"><i
+                      class="fas fa-long-arrow-alt-left me-2"></i> Continue shopping</a></h5>
                 <hr>
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
+                      {% if cartitems.count <= 0 %}
+                          <div>
+                           <p class="mb-1">Shopping cart</p>
+
+                          <p class="mb-0">Empty Cart</p>
+                          </div>
+                          {% else %}
                   <div>
-                    <p class="mb-1">Shopping cart</p>
+                          <p class="mb-1">Shopping cart</p>
                     <p class="mb-0">You have {{ cartitems.count }} items in your cart</p>
                   </div>
+
+                      {% endif %}
                   <div>
 
                   </div>
@@ -75,7 +84,9 @@
                         <div style="width: 80px;">
                           <h5 class="mb-0" style="font-size: 12px" id="{{ item.product.id }}price">&#x20A6;{% widthratio item.quantity 1 item.product.price %}</h5>
                         </div>
+                          <button data-product="{{ item.product.id }}" data-action="delete" style="background: transparent; border: none" class="update-cart">
                         <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt deleteitem" data-product="{{ item.product.id }}"></i></a>
+                              </button>
                       </div>
                     </div>
                   </div>
@@ -85,9 +96,13 @@
 
 
               </div>
+            {% if cartitems.count <= 0 %}
+
+            {% else %}
               <div class="col-lg-5">
 
                 <div class="card bg-primary text-white rounded-3">
+
                   <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
 
@@ -95,7 +110,7 @@
 
                     <button type="button" class="btn btn-info btn-block btn-lg">
                       <div class="d-flex justify-content-between">
-                        <span style="color: #0b0b0b">$4818.00</span>
+                        <span style="color: #0b0b0b">₦{{ total }}</span>
                         <span style="color: #0b0b0b">Checkout <i class="fas fa-long-arrow-alt-right ms-2"></i></span>
                       </div>
                     </button>
@@ -104,7 +119,7 @@
                 </div>
 
               </div>
-
+{% endif %}
             </div>
 
           </div>

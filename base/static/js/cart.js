@@ -1,8 +1,14 @@
 var updatebtns = document.getElementsByClassName('update-cart')
 
-var deletebtns = document.getElementsByClassName('deleteitem')
+function addtocart() {
+    console.log("lesss hooo")
+    var popup = document.getElementById('popupz')
+    popup.style.display = "block"
+    setTimeout(function () {
+        popup.style.display = "none"
 
-
+    }, 1500)
+}
 
 for(var i =0; i< updatebtns.length; i++){
     updatebtns[i].addEventListener('click', function () {
@@ -15,6 +21,7 @@ for(var i =0; i< updatebtns.length; i++){
             console.log("Not Authenticated")
         }
         else {
+            addtocart()
 
             updateuserorder(pid,action)
         }
@@ -48,3 +55,4 @@ function updateuserorder(pid, action) {
             price.innerText = "₦" +value['sum']
         })
 }
+
