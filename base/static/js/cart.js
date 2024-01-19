@@ -21,7 +21,7 @@ for(var i =0; i< updatebtns.length; i++){
             console.log("Not Authenticated")
         }
         else {
-            addtocart()
+
 
             updateuserorder(pid,action)
         }
@@ -31,9 +31,10 @@ for(var i =0; i< updatebtns.length; i++){
 }
 function updateuserorder(pid, action) {
     console.log("Sending data.....");
-    var url ='updateitem';
+    var url ='/updateitem';
     var itemquant = document.getElementById(pid)
     var price=document.getElementById(pid+'price')
+    var cartsum =  document.getElementById('totalsum')
 
     fetch(url, {
         method: 'POST',
@@ -53,6 +54,8 @@ function updateuserorder(pid, action) {
                 location.reload()
             }
             price.innerText = "₦" +value['sum']
+            cartsum.innerText = value['cartsum']
         })
+
 }
 
