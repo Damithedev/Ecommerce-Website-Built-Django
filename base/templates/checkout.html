@@ -11,43 +11,44 @@
 
 
         <!-- Checkout -->
+          <form method="post"  action="#">
+              {% csrf_token %}
         <div class="card shadow-0 border">
           <div class="p-4">
-            <h5 class="card-title mb-3">Guest checkout</h5>
-            <div class="row">
+            <h5 class="card-title mb-3">Checkout</h5>
+              {% if request.user.first_name == ""%}
+                        <div class="row">
               <div class="col-6 mb-3">
                 <p class="mb-0">First name</p>
                 <div class="form-outline">
-                  <input type="text" id="typeText" placeholder="Type here" class="form-control" />
+                  <input type="text" id="typeText" placeholder="Type here" name="firstname" class="form-control" required/>
                 </div>
               </div>
 
               <div class="col-6">
                 <p class="mb-0">Last name</p>
                 <div class="form-outline">
-                  <input type="text" id="typeText" placeholder="Type here" class="form-control" />
+                  <input type="text" id="typeText" placeholder="Type here" name="lastname" class="form-control" required/>
                 </div>
               </div>
 
               <div class="col-6 mb-3">
                 <p class="mb-0">Phone</p>
                 <div class="form-outline">
-                  <input type="tel" id="typePhone" value="+48 " class="form-control" />
+                  <input type="tel" id="typePhone" value="+234"  name="phone" class="form-control" required />
                 </div>
               </div>
 
               <div class="col-6 mb-3">
                 <p class="mb-0">Email</p>
                 <div class="form-outline">
-                  <input type="email" id="typeEmail" placeholder="example@gmail.com" class="form-control" />
+                  <input type="email" id="typeEmail" placeholder="example@gmail.com"  name="email" class="form-control" required/>
                 </div>
               </div>
             </div>
 
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-              <label class="form-check-label" for="flexCheckDefault">Keep me up to date on news</label>
-            </div>
+              {% endif %}
+
 
             <hr class="my-4" />
 
@@ -58,31 +59,20 @@
                 <!-- Default checked radio -->
                 <div class="form-check h-100 border rounded-3">
                   <div class="p-3">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked />
+                    <input class="form-check-input" type="radio" id="flexRadioDefault1"  value="delivery" name="deliveryoption" required />
                     <label class="form-check-label" for="flexRadioDefault1">
                       Express delivery <br />
-                      <small class="text-muted">3-4 days via Fedex </small>
+                      <small class="text-muted">3-4 days via Logistics</small>
                     </label>
                   </div>
                 </div>
               </div>
+
               <div class="col-lg-4 mb-3">
                 <!-- Default radio -->
                 <div class="form-check h-100 border rounded-3">
                   <div class="p-3">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" />
-                    <label class="form-check-label" for="flexRadioDefault2">
-                      Post office <br />
-                      <small class="text-muted">20-30 days via post </small>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4 mb-3">
-                <!-- Default radio -->
-                <div class="form-check h-100 border rounded-3">
-                  <div class="p-3">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" />
+                    <input class="form-check-input" type="radio" name="deliveryoption" value="pickup" id="flexRadioDefault3" />
                     <label class="form-check-label" for="flexRadioDefault3">
                       Self pick-up <br />
                       <small class="text-muted">Come to our shop </small>
@@ -92,63 +82,42 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row" id = "addressbox" style="display: none">
               <div class="col-sm-8 mb-3">
                 <p class="mb-0">Address</p>
                 <div class="form-outline">
-                  <input type="text" id="typeText" placeholder="Type here" class="form-control" />
+                  <input type="text" id="typeText" placeholder="Type here"  name="address" class="form-control" />
                 </div>
               </div>
 
               <div class="col-sm-4 mb-3">
-                <p class="mb-0">City</p>
-                <select class="form-select">
-                  <option value="1">New York</option>
-                  <option value="2">Moscow</option>
-                  <option value="3">Samarqand</option>
+                <p class="mb-0">State</p>
+                <select class="form-select" name="city">
+                  <option value="lagos">Lagos</option>
                 </select>
               </div>
 
-              <div class="col-sm-4 mb-3">
-                <p class="mb-0">House</p>
-                <div class="form-outline">
-                  <input type="text" id="typeText" placeholder="Type here" class="form-control" />
-                </div>
-              </div>
 
-              <div class="col-sm-4 col-6 mb-3">
-                <p class="mb-0">Postal code</p>
-                <div class="form-outline">
-                  <input type="text" id="typeText" class="form-control" />
-                </div>
-              </div>
 
-              <div class="col-sm-4 col-6 mb-3">
-                <p class="mb-0">Zip</p>
-                <div class="form-outline">
-                  <input type="text" id="typeText" class="form-control" />
-                </div>
-              </div>
+
             </div>
 
-            <div class="form-check mb-3">
-              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1" />
-              <label class="form-check-label" for="flexCheckDefault1">Save this address</label>
-            </div>
+
 
             <div class="mb-3">
               <p class="mb-0">Message to seller</p>
               <div class="form-outline">
-                <textarea class="form-control" id="textAreaExample1" rows="2"></textarea>
+                <textarea class="form-control" id="textAreaExample1"  name="msgsell" rows="2"></textarea>
               </div>
             </div>
 
             <div class="float-end">
               <button class="btn btn-light border">Cancel</button>
-              <button class="btn btn-success shadow-0 border">Continue</button>
+              <button class="btn btn-success shadow-0 border" type="submit">Continue</button>
             </div>
           </div>
         </div>
+          </form>
         <!-- Checkout -->
       </div>
       <div class="col-xl-4 col-lg-4 d-flex justify-content-center justify-content-lg-end">
@@ -160,12 +129,12 @@
           </div>
           <div class="d-flex justify-content-between">
             <p class="mb-2">Shipping cost:</p>
-            <p class="mb-2">+ $14.00</p>
+            <p class="mb-2">+ ₦<span id = "shipping"></span></p>
           </div>
           <hr />
           <div class="d-flex justify-content-between">
             <p class="mb-2">Total price:</p>
-            <p class="mb-2 fw-bold">$149.90</p>
+            <p class="mb-2 fw-bold">$<span id="totalsum"></span></p>
           </div>
 
           <div class="input-group mt-3 mb-4">
@@ -199,7 +168,37 @@
     </div>
   </div>
 </section>
+<script type="text/javascript">
+  var delioption = document.getElementsByName('deliveryoption');
+  var shippingprice = document.getElementById("shipping");
+  var totalprice = document.getElementById("totalsum");
+  var addressbox = document.getElementById("addressbox");
 
+  function setRequiredAttribute(required) {
+    var addressInputs = addressbox.querySelectorAll('input, select');
+    for (var j = 0; j < addressInputs.length; j++) {
+      addressInputs[j].required = required;
+    }
+  }
+  for (var i = 0; i < delioption.length; i++) {
+    delioption[i].onclick = (function (index) {
+      return function () {
+        console.log(delioption[index].value);
+        if (delioption[index].value === "delivery") {
+          shippingprice.innerText = 2000;
+          total = Number("{{ total }}") + 2000;
+          totalprice.innerText = total;
+          addressbox.style.display = "block"; 
+          setRequiredAttribute(true);
+        } else if (delioption[index].value === "pickup") {
+          shippingprice.innerText = 0;
+          totalprice.innerText = "{{ total }}";
+          addressbox.style.display = "none";
+        }
+      };
+    })(i);
+  }
+</script>
 <!-- Footer -->
 
 <!-- Footer -->

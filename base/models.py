@@ -28,19 +28,37 @@ class ProductImages(models.Model):
 class Customer(AbstractUser):
     phone = models.CharField(max_length=11, null=True, blank=True)
     created = models.DateField(auto_now_add=True)  # Use auto_now_add for creation date
-    address = models.CharField(max_length=2000, null=True, blank=True)
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    last_name = models.CharField(max_length=100, null=True, blank=True)
+    email = models.EmailField(max_length=10, null=True, blank=True)
+
 
 
     def __str__(self):
         return self.username
+
+class Address(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,  related_name='useraddress')
+    address = models.CharField(max_length=200, null=True, blank=True)
+    city = models.CharField(max_length=30, null=True, blank=True)
+    house_number = models.CharField(max_length=30, null=True, blank=True)
+    landmark = models.CharField(max_length=300, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.house_number} {self.address} {self.city}'
+
 
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     status = models.CharField(max_length=19)
     date = models.DateTimeField(auto_now_add=True)
-
+    deliverymethod = models.CharField(max_length=100, null=True, blank=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
+    def __str__(self):
+        return f'{self.customer} order on {self.date}'
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_items')
     quantity = models.IntegerField(default=0)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
+

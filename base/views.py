@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 
 from base.forms import CustomAuthenticationForm, CustomUserCreationForm
-from base.models import Category, Product, ProductImages, Order, OrderItem
+from base.models import Category, Product, ProductImages, Order, OrderItem,Customer,Address
 
 
 # Create your views here.
@@ -194,7 +194,7 @@ def updateitem(request):
 
 
 def cart(request):
-    order= Order.objects.get(customer=request.user, status='cart')
+    order , createdz= Order.objects.get_or_create(customer=request.user, status='cart')
     print(order)
     cartitems = OrderItem.objects.filter(order=order)
     cartsum = 0
@@ -216,6 +216,37 @@ def cart(request):
 
 def checkout(request):
     order = Order.objects.get(customer=request.user, status='cart')
+    if request.method == 'POST':
+        print(request.POST)
+        user = request.user
+        if user.first_name == '':
+            first_name = request.POST['firstname']
+            last_name =request.POST['lastname']
+            phone = request.POST['phone']
+            email = request.POST['email']
+
+            user.first_name = first_name
+            user.last_name = last_name
+            user.phone = phone
+            user.email = email
+            user.save()
+        delivery_option = request.POST['deliveryoption']
+        addressinput = request.POST['address']
+        house_number = request.POST['house']
+        landmark= request.POST['landmark']
+        msgforseller = request.POST['msgsell']
+
+        address, created = Address.objects.get_or_create(customer=user)
+        address.address = addressinput
+        address.house_number = house_number
+        address.landmark = landmark
+        address.save()
+        order.deliverymethod = delivery_option
+        order.address = address
+        order.save()
+
+
+
     print(order)
     cartitems = OrderItem.objects.filter(order=order)
     cartsum = 0
@@ -232,4 +263,6 @@ def checkout(request):
 
     context = {'categories': categories, 'category_products': category_products, 'reg_form': registration_form,
                'login_form': login_form, 'cartitems': cartitems, 'total': cartsum}
+
+
     return render(request, 'checkout.html', context)
