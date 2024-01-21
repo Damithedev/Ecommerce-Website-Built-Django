@@ -13,6 +13,7 @@ function addtocart() {
 for(var i =0; i< updatebtns.length; i++){
     updatebtns[i].addEventListener('click', function () {
         var pid = this.dataset.product;
+        var productquantity = "{{}}"
         var action =  this.dataset.action
 
         console.log(pid);

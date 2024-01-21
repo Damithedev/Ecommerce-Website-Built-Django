@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -162,7 +163,10 @@ def updateitem(request):
     orderitem, created = OrderItem.objects.get_or_create(order=order, product=product)
     if action == 'add':
         orderitem.quantity +=1
+        if orderitem.quantity > product.quantity:
+            return JsonResponse('product quantity exceeds')
         orderitem.save()
+
         print(orderitem.quantity)
         cartitems = OrderItem.objects.filter(order=order)
         cartsum = 0
@@ -216,6 +220,8 @@ def cart(request):
 
 def checkout(request):
     order = Order.objects.get(customer=request.user, status='cart')
+    cartitems = OrderItem.objects.filter(order=order)
+
     if request.method == 'POST':
         print(request.POST)
         user = request.user
@@ -232,23 +238,31 @@ def checkout(request):
             user.save()
         delivery_option = request.POST['deliveryoption']
         addressinput = request.POST['address']
-        house_number = request.POST['house']
-        landmark= request.POST['landmark']
+        city = request.POST['city']
         msgforseller = request.POST['msgsell']
 
         address, created = Address.objects.get_or_create(customer=user)
         address.address = addressinput
-        address.house_number = house_number
-        address.landmark = landmark
+        address.city = city
         address.save()
+        order.status = "Recieved"
         order.deliverymethod = delivery_option
         order.address = address
+        order.date = datetime.now()
         order.save()
+        for item in cartitems:
+
+            item.product.quantity -= item.quantity
+            item.product.save()
+            print(f'item:{item.product.quantity}')
+        return redirect('home')
+
 
 
 
     print(order)
-    cartitems = OrderItem.objects.filter(order=order)
+
+
     cartsum = 0
     for item in cartitems:
         cartsum += item.quantity * item.product.price
@@ -266,3 +280,23 @@ def checkout(request):
 
 
     return render(request, 'checkout.html', context)
+
+
+def invoice(request, oid):
+    order = Order.objects.get(customer=request.user, id = oid)
+    print(order)
+    cartitems = OrderItem.objects.filter(order=order)
+    cartsum = 0
+    for item in cartitems:
+        cartsum += item.quantity * item.product.price
+    registration_form = CustomUserCreationForm()
+    login_form = CustomAuthenticationForm()
+    all_categories = Category.objects.all()
+    category_products = {}
+    for category in all_categories:
+        products = Product.objects.filter(category=category).order_by('-created')[:3]
+        category_products[category] = products
+    categories = Category.objects.filter(parent__isnull=True)
+    context = {'categories': categories, 'category_products': category_products, 'reg_form': registration_form,
+               'login_form': login_form, 'cartitems': cartitems, 'total': cartsum , 'orders': order}
+    return render(request, 'order.html', context)

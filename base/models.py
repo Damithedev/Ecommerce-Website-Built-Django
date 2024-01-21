@@ -18,6 +18,8 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     cashondelivery = models.BooleanField(default=True)
     discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    quantity = models.PositiveIntegerField(default=1)
+
     def __str__(self):
         return self.title
 
@@ -41,11 +43,9 @@ class Address(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,  related_name='useraddress')
     address = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=30, null=True, blank=True)
-    house_number = models.CharField(max_length=30, null=True, blank=True)
-    landmark = models.CharField(max_length=300, null=True, blank=True)
 
     def __str__(self):
-        return f'{self.house_number} {self.address} {self.city}'
+        return f'{self.address} {self.city}'
 
 
 
