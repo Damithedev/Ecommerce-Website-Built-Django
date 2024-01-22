@@ -55,6 +55,9 @@ class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     deliverymethod = models.CharField(max_length=100, null=True, blank=True)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
+    subtotal = models.DecimalField(max_digits=40, decimal_places=2, null=True, blank=True)
+    total = models.DecimalField(max_digits=40, decimal_places=2, null=True, blank=True)
+    shipping_fee = models.DecimalField(max_digits=40, decimal_places=2, null=True, blank=True)
     def __str__(self):
         return f'{self.customer} order on {self.date}'
 class OrderItem(models.Model):

@@ -106,7 +106,7 @@
 
                                         <td width="20%">
                                             <div class="text-right">
-                                                <span class="font-weight-bold">{{ item.product.price }}</span>
+                                                <span class="font-weight-bold">₦{{ item.product.price }}</span>
                                             </div>
                                         </td>
                                         </tr>
@@ -136,7 +136,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="text-right">
-                                                            <span>$168.50</span>
+                                                            <span>₦{{ total }}</span>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -152,55 +152,27 @@
                                                     </td>
                                                     <td>
                                                         <div class="text-right">
-                                                            <span>$22</span>
+                                                            <span>₦{{ orders.shipping_fee }}</span>
                                                         </div>
                                                     </td>
                                                 </tr>
 
 
-                                                 <tr>
-                                                    <td>
-                                                        <div class="text-left">
-
-                                                            <span class="text-muted">Tax Fee</span>
-
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-right">
-                                                            <span>$7.65</span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
 
 
-                                                 <tr>
-                                                    <td>
-                                                        <div class="text-left">
-
-                                                            <span class="text-muted">Discount</span>
-
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-right">
-                                                            <span class="text-success">$168.50</span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
 
 
                                                  <tr class="border-top border-bottom">
                                                     <td>
                                                         <div class="text-left">
 
-                                                            <span class="font-weight-bold">Subtotal</span>
+                                                            <span class="font-weight-bold">total</span>
 
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-right">
-                                                            <span class="font-weight-bold">$238.50</span>
+                                                            <span class="font-weight-bold">₦{{ orders.total }}</span>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -216,9 +188,9 @@
                                 </div>
 
 
-                                <p>We will be sending shipping confirmation email when the item shipped successfully!</p>
+                                <p>We will be sending a shipping confirmation email when the item shipped successfully!</p>
                                 <p class="font-weight-bold mb-0">Thanks for shopping with us!</p>
-                                <span>Nike Team</span>
+
 
 
 
@@ -230,7 +202,7 @@
                         <div class="d-flex justify-content-between footer p-3">
 
                             <span>Need Help? visit our <a href="#"> help center</a></span>
-                             <span>12 June, 2020</span>
+                             <span>{{ orders.date }}</span>
 
                         </div>
 

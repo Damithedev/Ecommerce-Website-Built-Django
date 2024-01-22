@@ -208,7 +208,8 @@
 				</div>
 				<div class="modal-body">
                     {{ request.user }}
-                    <form method="post">
+                    <form method="post" action="{% url 'logout' %}?next={{ request.get_full_path }}">
+                        {% csrf_token %}
                         <div class="right-w3l">
 							<input type="submit" class="form-control" value="Logout">
 						</div>

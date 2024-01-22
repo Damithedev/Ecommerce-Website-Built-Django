@@ -2,11 +2,13 @@ import json
 from datetime import datetime
 
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 
+from Tag import settings
 from base.forms import CustomAuthenticationForm, CustomUserCreationForm
 from base.models import Category, Product, ProductImages, Order, OrderItem,Customer,Address
 
@@ -156,23 +158,41 @@ def updateitem(request):
     data = json.loads(request.body)
     productID = data['pid']
     action = data['action']
+    print("daiii")
     print(productID)
-    customer = request.user
     product = Product.objects.get(id=productID)
-    order , created1 = Order.objects.get_or_create(customer=customer, status='cart')
+    if request.user.is_authenticated:
+        customer = request.user
+        order, created = Order.objects.get_or_create(customer=customer, status='cart')
+    else:
+        guest_user, created = Customer.objects.get_or_create(username='guest')
+        customer = guest_user
+        cart_id = request.session.get('cart_id')
+
+        if cart_id is None:
+            order = Order.objects.create(customer=customer, status='cart')
+            request.session['cart_id'] = order.id
+        else:
+            try:
+                order = Order.objects.get(customer=customer, status='cart', id=cart_id)
+            except Order.DoesNotExist:
+                order = Order.objects.create(customer=customer, status='cart')
+                request.session['cart_id'] = order.id
+
+
     orderitem, created = OrderItem.objects.get_or_create(order=order, product=product)
     if action == 'add':
         orderitem.quantity +=1
         if orderitem.quantity > product.quantity:
-            return JsonResponse('product quantity exceeds')
+            return JsonResponse({'response': 'Max quantity exceeded'})
         orderitem.save()
 
-        print(orderitem.quantity)
+
         cartitems = OrderItem.objects.filter(order=order)
         cartsum = 0
         for item in cartitems:
             cartsum += item.quantity * item.product.price
-        return JsonResponse({'quantity':orderitem.quantity, 'sum': orderitem.quantity*product.price, 'cartsum': cartsum}, safe=False)
+        return JsonResponse({'quantity':orderitem.quantity, 'sum': orderitem.quantity*product.price, 'cartsum': cartsum, 'response': 'success'}, safe=False)
 
     if action == 'remove':
         orderitem.quantity -=1
@@ -184,26 +204,45 @@ def updateitem(request):
         cartsum = 0
         for item in cartitems:
             cartsum += item.quantity * item.product.price
-        return JsonResponse({'quantity': orderitem.quantity, 'sum': orderitem.quantity * product.price, 'cartsum': cartsum}, safe=False)
+        return JsonResponse({'quantity': orderitem.quantity, 'sum': orderitem.quantity * product.price, 'cartsum': cartsum, 'response': 'success'}, safe=False)
     if orderitem.quantity <= 0 or action == 'delete':
         orderitem.delete()
         cartitems = OrderItem.objects.filter(order=order)
         cartsum = 0
         for item in cartitems:
             cartsum += item.quantity * item.product.price
-        return JsonResponse({'quantity': 0, 'sum': orderitem.quantity * product.price, 'cartsum': cartsum}, safe=False)
+        return JsonResponse({'quantity': 0, 'sum': orderitem.quantity * product.price, 'cartsum': cartsum, 'response': 'success'}, safe=False)
 
 
     return JsonResponse('Item was added', safe=False)
 
 
 def cart(request):
-    order , createdz= Order.objects.get_or_create(customer=request.user, status='cart')
+    if request.user.is_authenticated:
+        customer = request.user
+        order, created = Order.objects.get_or_create(customer=customer, status='cart')
+    else:
+        guest_user, created = Customer.objects.get_or_create(username='guest')
+        customer = guest_user
+        cart_id = request.session.get('cart_id')
+
+        if cart_id is None:
+            order = Order.objects.create(customer=customer, status='cart')
+            request.session['cart_id'] = order.id
+        else:
+            try:
+                order = Order.objects.get(customer=customer, status='cart', id=cart_id)
+            except Order.DoesNotExist:
+                order = Order.objects.create(customer=customer, status='cart')
+                request.session['cart_id'] = order.id
+
     print(order)
+
     cartitems = OrderItem.objects.filter(order=order)
     cartsum = 0
     for item in cartitems:
-        cartsum += item.quantity*item.product.price
+        cartsum += item.quantity * item.product.price
+
     registration_form = CustomUserCreationForm()
     login_form = CustomAuthenticationForm()
     all_categories = Category.objects.all()
@@ -212,16 +251,28 @@ def cart(request):
         products = Product.objects.filter(category=category).order_by('-created')[:3]
         category_products[category] = products
     categories = Category.objects.filter(parent__isnull=True)
+    order.subtotal = cartsum
+    order.save()
 
-    context = {'categories': categories, 'category_products': category_products, 'reg_form': registration_form,
-               'login_form': login_form, 'cartitems':cartitems , 'total': cartsum}
-    return render(request, 'cart.html', context )
+    context = {
+        'categories': categories,
+        'category_products': category_products,
+        'reg_form': registration_form,
+        'login_form': login_form,
+        'cartitems': cartitems,
+        'total': cartsum
+    }
 
+    return render(request, 'cart.html', context)
 
+@login_required
 def checkout(request):
     order = Order.objects.get(customer=request.user, status='cart')
     cartitems = OrderItem.objects.filter(order=order)
+    print(order)
 
+
+    cartsum = order.subtotal
     if request.method == 'POST':
         print(request.POST)
         user = request.user
@@ -237,10 +288,16 @@ def checkout(request):
             user.email = email
             user.save()
         delivery_option = request.POST['deliveryoption']
+        if delivery_option == 'delivery':
+            order.total = order.subtotal + 2000
+            order.shipping_fee = 2000
+            order.save()
+        else:
+            order.shipping_fee = 0
+            order.total = order.subtotal
         addressinput = request.POST['address']
         city = request.POST['city']
         msgforseller = request.POST['msgsell']
-
         address, created = Address.objects.get_or_create(customer=user)
         address.address = addressinput
         address.city = city
@@ -255,17 +312,8 @@ def checkout(request):
             item.product.quantity -= item.quantity
             item.product.save()
             print(f'item:{item.product.quantity}')
-        return redirect('home')
+        return redirect('invoice', oid = order.id)
 
-
-
-
-    print(order)
-
-
-    cartsum = 0
-    for item in cartitems:
-        cartsum += item.quantity * item.product.price
     registration_form = CustomUserCreationForm()
     login_form = CustomAuthenticationForm()
     all_categories = Category.objects.all()
@@ -281,14 +329,13 @@ def checkout(request):
 
     return render(request, 'checkout.html', context)
 
-
+@login_required
 def invoice(request, oid):
     order = Order.objects.get(customer=request.user, id = oid)
     print(order)
     cartitems = OrderItem.objects.filter(order=order)
-    cartsum = 0
-    for item in cartitems:
-        cartsum += item.quantity * item.product.price
+    cartsum = order.subtotal
+    total = order.total
     registration_form = CustomUserCreationForm()
     login_form = CustomAuthenticationForm()
     all_categories = Category.objects.all()
@@ -298,5 +345,5 @@ def invoice(request, oid):
         category_products[category] = products
     categories = Category.objects.filter(parent__isnull=True)
     context = {'categories': categories, 'category_products': category_products, 'reg_form': registration_form,
-               'login_form': login_form, 'cartitems': cartitems, 'total': cartsum , 'orders': order}
+               'login_form': login_form, 'cartitems': cartitems, 'subtotal': cartsum , 'orders': order , 'total': total}
     return render(request, 'order.html', context)

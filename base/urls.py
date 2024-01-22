@@ -1,3 +1,4 @@
+from django.contrib.auth.views import LogoutView
 from django.urls import path
 from .import views
 
@@ -12,5 +13,6 @@ urlpatterns = [
     path('updateitem', views.updateitem, name='updateitem'),
     path('cart', views.cart, name='cart'),
     path('checkout', views.checkout, name='checkout'),
-    path('invoice/<int:oid>' ,views.invoice, name='invoice')
+    path('invoice/<int:oid>' ,views.invoice, name='invoice'),
+    path('logout/', LogoutView.as_view(), name='logout'),
     ]

@@ -107,7 +107,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-4">
 
                     </div>
-
+                            {% if request.user.is_authenticated %}
                     <button type="button" class="btn btn-info btn-block btn-lg"><a href="{% url 'checkout' %}">
                       <div class="d-flex justify-content-between" >
                         <span style="color: #0b0b0b">₦<span id="totalsum">{{ total }}</span></span>
@@ -116,6 +116,9 @@
                       </div>
                           </a>
                     </button>
+                                {% else %}
+                                <p style="color: red"> Login to Checkout your cart</p>
+                                {% endif %}
 
                   </div>
                 </div>
