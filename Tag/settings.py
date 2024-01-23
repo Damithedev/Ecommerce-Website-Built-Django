@@ -26,8 +26,7 @@ SECRET_KEY = 'django-insecure-0=38d8*_1fnja4ha)2&^d6-7(ogik70i^*-y#ebsbez=)!7_&q
 DEBUG = True
 
 ALLOWED_HOSTS = [
-'16.171.175.197',
-'127.0.0.1',
+'*'
 ]
 
 
@@ -133,3 +132,4 @@ AUTH_USER_MODEL = 'base.Customer'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+django_heroku.settings(locals())
