@@ -12,10 +12,34 @@ from Tag import settings
 from base.forms import CustomAuthenticationForm, CustomUserCreationForm
 from base.models import Category, Product, ProductImages, Order, OrderItem,Customer,Address
 
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+
+
+def send_email(subject, message, recipients, template_path, context):
+    # Render HTML content from the template and context
+    html_content = render_to_string(template_path, context)
+    # Send the email
+
+
+    send_mail(
+        subject=subject,
+        message=message,  # Plain text version (can be an empty string)
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=recipients,
+        html_message=html_content  # Attach the HTML content
+    )
+
+
 
 # Create your views here.
 
+
 def home(request):
+
     registration_form = CustomUserCreationForm()
     login_form = CustomAuthenticationForm()
     all_categories = Category.objects.all()
@@ -276,7 +300,7 @@ def checkout(request):
     if request.method == 'POST':
         print(request.POST)
         user = request.user
-        if user.first_name == '':
+        if user.first_name == '' or user.first_name is None:
             first_name = request.POST['firstname']
             last_name =request.POST['lastname']
             phone = request.POST['phone']
@@ -344,6 +368,8 @@ def invoice(request, oid):
         products = Product.objects.filter(category=category).order_by('-created')[:3]
         category_products[category] = products
     categories = Category.objects.filter(parent__isnull=True)
-    context = {'categories': categories, 'category_products': category_products, 'reg_form': registration_form,
+
+    context = { 'categories': categories, 'category_products': category_products, 'reg_form': registration_form,
                'login_form': login_form, 'cartitems': cartitems, 'subtotal': cartsum , 'orders': order , 'total': total}
+    send_email("Hello", "Hello world", [order.customer.email],template_path='/home/damilola/PycharmProjects/Tag/templates/email.html',context=context)
     return render(request, 'order.html', context)
