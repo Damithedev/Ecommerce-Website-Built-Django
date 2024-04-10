@@ -16,7 +16,10 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
+from rest_framework.views import APIView
+from Tag.serializers import Orderserializer
+from rest_framework import generics, status
+from rest_framework.response import Response
 
 
 def send_email(subject, message, recipients, template_path, context):
@@ -371,5 +374,11 @@ def invoice(request, oid):
 
     context = { 'categories': categories, 'category_products': category_products, 'reg_form': registration_form,
                'login_form': login_form, 'cartitems': cartitems, 'subtotal': cartsum , 'orders': order , 'total': total}
-    send_email("Hello", "Hello world", [order.customer.email],template_path='/home/damilola/PycharmProjects/Tag/templates/email.html',context=context)
+    send_email("Hello", "Hello world", [order.customer.email],template_path='/home/damilola/Documents/django projecta/Ecommerce-Website-Built-Django/templates/email.html',context=context)
     return render(request, 'order.html', context)
+
+class OrderList(generics.ListCreateAPIView):
+    def get(self, request, format=None):
+        orders = Order.objects.filter(status = 'Recieved')
+        serializer = Orderserializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
