@@ -1,4 +1,5 @@
 import json
+import threading
 from datetime import datetime
 
 from django.contrib.auth import authenticate, login
@@ -20,8 +21,7 @@ from rest_framework.views import APIView
 from Tag.serializers import Orderserializer
 from rest_framework import generics, status
 from rest_framework.response import Response
-
-
+import asyncio
 def send_email(subject, message, recipients, template_path, context):
     # Render HTML content from the template and context
     html_content = render_to_string(template_path, context)
@@ -36,6 +36,10 @@ def send_email(subject, message, recipients, template_path, context):
         html_message=html_content  # Attach the HTML content
     )
 
+def send_email_wrapper(*args, **kwargs):
+    # This wrapper function will run send_email in a separate thread
+    email_thread = threading.Thread(target=send_email, args=args, kwargs=kwargs)
+    email_thread.start()
 
 
 # Create your views here.
@@ -374,7 +378,9 @@ def invoice(request, oid):
 
     context = { 'categories': categories, 'category_products': category_products, 'reg_form': registration_form,
                'login_form': login_form, 'cartitems': cartitems, 'subtotal': cartsum , 'orders': order , 'total': total}
-    send_email("Hello", "Hello world", [order.customer.email],template_path='/home/damilola/Documents/django projecta/Ecommerce-Website-Built-Django/templates/email.html',context=context)
+    send_email_wrapper("Hello", "Hello world", [order.customer.email],
+                       template_path='/home/damilola/Documents/django projecta/Ecommerce-Website-Built-Django/templates/email.html',
+                       context=context)
     return render(request, 'order.html', context)
 
 class OrderList(generics.ListCreateAPIView):
