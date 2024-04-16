@@ -22,6 +22,9 @@
     <orderEntry type="library" name="jquery" level="application" />
     <orderEntry type="library" name="minicart" level="application" />
   </component>
+  <component name="PackageRequirementsSettings">
+    <option name="versionSpecifier" value="Don't specify version" />
+  </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
   </component>
